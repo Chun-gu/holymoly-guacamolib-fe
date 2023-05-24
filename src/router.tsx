@@ -1,7 +1,7 @@
 import { createBrowserRouter } from 'react-router-dom'
 
 import { Layout } from '@/components'
-import { MainPage, TopicPage } from '@/pages'
+import { NewTopicPage, MainPage, TopicPage } from '@/pages'
 
 export const router = createBrowserRouter([
   {
@@ -10,6 +10,7 @@ export const router = createBrowserRouter([
     children: [
       { path: '/', element: <MainPage /> },
       { path: 'topics/:topicId', element: <TopicPage /> },
+      { path: 'newTopic', element: <NewTopicPage /> },
     ],
   },
 ])
