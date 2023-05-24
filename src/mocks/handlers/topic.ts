@@ -4,6 +4,7 @@ import { db } from '../db'
 
 type TopicSchema = {
   id: string
+  title: string
   content: string
   firstOption: {
     content?: string
@@ -19,6 +20,7 @@ type TopicSchema = {
 function refineTopic(topic: TopicSchema) {
   return {
     id: topic.id,
+    title: topic.title,
     content: topic.content,
     firstOption: { content: topic.firstOption.content },
     secondOption: { content: topic.secondOption.content },
@@ -28,10 +30,14 @@ function refineTopic(topic: TopicSchema) {
 
 const handlers = [
   // 전체 주제
-  rest.get('/topics', (_, res, ctx) => {
+  rest.get('/topics', (req, res, ctx) => {
+    const sort = req.url.searchParams.get('sort')
+    console.log(sort)
     const topics = db.topic.getAll().map((topic) => refineTopic(topic))
 
-    if (topics) return res(ctx.json({ statusCode: 200, data: topics }))
+    // if (topics) return res(ctx.json({ statusCode: 200, data: topics }))
+    // else res(ctx.json({ statusCode: 500, data: '주제들을 가져오지 못했어요.' }))
+    if (topics) return res(ctx.status(200), ctx.json(topics))
     else res(ctx.json({ statusCode: 500, data: '주제들을 가져오지 못했어요.' }))
   }),
 
@@ -51,7 +57,13 @@ const handlers = [
   // 주제 생성
   rest.post('/topics', async (req, res, ctx) => {
     const { topic } = await req.json()
-    const createdTopic = db.topic.create(topic)
+    const createdTopic = db.topic.create({
+      title: topic.title,
+      content: topic.content,
+      firstOption: { content: topic.firstOption },
+      secondOption: { content: topic.secondOption },
+      password: topic.password,
+    })
 
     if (createdTopic) return res(ctx.json({ statusCode: 204 }))
     else

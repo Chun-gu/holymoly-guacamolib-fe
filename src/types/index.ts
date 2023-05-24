@@ -8,7 +8,7 @@ export type Topic = {
 }
 
 export type NewTopic = Pick<Topic, 'title' | 'content'> & {
-  firstOption: { content: string }
-  secondOption: { content: string }
+  firstOption: string
+  secondOption: string
   password: string
 }

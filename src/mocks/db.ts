@@ -4,6 +4,7 @@ import { nanoid } from 'nanoid'
 export const db = factory({
   topic: {
     id: primaryKey(() => nanoid()),
+    title: String,
     content: String,
     firstOption: {
       content: String,
