@@ -20,7 +20,7 @@ export default function HotTopics() {
     <ul>
       {hotTopics.map((hotTopic) => (
         <li key={hotTopic.id}>
-          <TopicItem {...hotTopic} />
+          <TopicItem topicId={hotTopic.id} />
         </li>
       ))}
     </ul>

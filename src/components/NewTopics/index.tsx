@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 
-import { getTopics, topicKeys } from '@/api/topic'
+import { getNewTopics, topicKeys } from '@/api/topic'
 import { TopicItem } from '@/components'
 
 export default function NewTopics() {
@@ -9,8 +9,8 @@ export default function NewTopics() {
     isLoading,
     isError,
   } = useQuery({
-    queryKey: topicKeys.all,
-    queryFn: getTopics,
+    queryKey: ['topics', { sort: 'new' }],
+    queryFn: getNewTopics,
   })
 
   if (isLoading) return <div>로딩 중...</div>
@@ -20,7 +20,7 @@ export default function NewTopics() {
     <ul>
       {newTopics.map((newTopic) => (
         <li key={newTopic.id}>
-          <TopicItem {...newTopic} />
+          <TopicItem topicId={newTopic.id} />
         </li>
       ))}
     </ul>

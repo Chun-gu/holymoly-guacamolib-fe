@@ -1,6 +1,24 @@
-import { Topic } from '@/types'
+import { useQuery } from '@tanstack/react-query'
 
-export default function TopicItem(topic: Topic) {
+import { getTopic } from '@/api/topic'
+
+type Props = {
+  topicId: string
+}
+
+export default function TopicItem({ topicId }: Props) {
+  const {
+    isLoading,
+    data: topic,
+    isError,
+  } = useQuery({
+    queryKey: ['topics', topicId],
+    queryFn: () => getTopic(topicId),
+  })
+
+  if (isLoading) return <div>로딩 중...</div>
+  if (isError) return <div>에러!</div>
+
   return (
     <div>
       <span>{topic.id}</span>
