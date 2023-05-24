@@ -33,7 +33,19 @@ const handlers = [
   rest.get('/topics', (req, res, ctx) => {
     const sort = req.url.searchParams.get('sort')
     console.log(sort)
-    const topics = db.topic.getAll().map((topic) => refineTopic(topic))
+    let topics
+    if (sort === 'new')
+      topics = db.topic.findMany({
+        take: 10,
+        skip: 0,
+        orderBy: { createdAt: 'desc' },
+      })
+    // else if (sort === 'hot')
+    //   topics = db.topic.findMany({
+    //     take: 5,
+    //     orderBy: { commentsCount: 'desc' },
+    //   })
+    else topics = db.topic.getAll().map((topic) => refineTopic(topic))
 
     // if (topics) return res(ctx.json({ statusCode: 200, data: topics }))
     // else res(ctx.json({ statusCode: 500, data: '주제들을 가져오지 못했어요.' }))
