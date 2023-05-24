@@ -1,7 +1,7 @@
 import { useMutation } from '@tanstack/react-query'
 
 import { createTopic, topicKeys } from '@/api/topic'
-import { HotTopics } from '@/components'
+import { HotTopics, NewTopics } from '@/components'
 import { queryClient } from '@/main'
 
 export default function MainPage() {
@@ -29,7 +29,7 @@ export default function MainPage() {
       </section>
       <section>
         <h2>새로운 주제</h2>
-        <ul></ul>
+        <NewTopics />
       </section>
       <button>글쓰기</button>
     </>
