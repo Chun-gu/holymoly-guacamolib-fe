@@ -1,4 +1,4 @@
-import { factory, manyOf, primaryKey } from '@mswjs/data'
+import { factory, primaryKey } from '@mswjs/data'
 import { nanoid } from 'nanoid'
 
 export const db = factory({
@@ -15,15 +15,16 @@ export const db = factory({
       count: () => 0,
     },
     password: String,
+    voteCount: () => 0,
+    commentCount: () => 0,
     createdAt: () => new Date(),
-    comments: manyOf('comment'),
-    commentsCount: Number,
   },
   comment: {
     id: primaryKey(() => nanoid()),
+    topicId: String,
     index: Number,
     content: String,
     password: String,
-    createdAt: String,
+    createdAt: () => new Date(),
   },
 })
