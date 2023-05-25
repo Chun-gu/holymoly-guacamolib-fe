@@ -1,4 +1,6 @@
 export { default as HotTopics } from './HotTopics'
+export { default as CommentInput } from './CommentInput'
+export { default as CommentList } from './CommentList'
 export { default as NewTopics } from './NewTopics'
 export { default as TopicItem } from './TopicItem'
 export { default as Layout } from './Layout'
