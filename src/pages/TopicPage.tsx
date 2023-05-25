@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/react-query'
 import { useParams } from 'react-router-dom'
 
 import { getTopic } from '@/api/topic'
+import { formatDate } from '@/lib'
 
 export default function TopicPage() {
   const { topicId } = useParams() as { topicId: string }
@@ -21,7 +22,7 @@ export default function TopicPage() {
     <>
       <section>
         <div>
-          <span>{topic.createdAt}</span>
+          <span>{formatDate(topic.createdAt, 'relative')}</span>
           <button>공유</button>
         </div>
         <h1>Q. {topic.title}</h1>
