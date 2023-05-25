@@ -16,6 +16,8 @@ export default function HotTopics() {
   if (isLoading) return <div>로딩 중...</div>
   if (isError) return <div>에러!</div>
 
+  if (hotTopics.length === 0) return <div>주제가 하나도 없어요.</div>
+
   return (
     <ul>
       {hotTopics.map((hotTopic) => (
