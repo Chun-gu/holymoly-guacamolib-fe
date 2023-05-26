@@ -23,7 +23,13 @@ export async function getComments(topicId: string): Promise<Comment[]> {
   return response.data
 }
 
-export async function createComment(topicId: string, newComment: NewComment) {
+export async function createComment({
+  topicId,
+  newComment,
+}: {
+  topicId: string
+  newComment: NewComment
+}): Promise<{ createdCommentId: string }> {
   const response = await client.post(`topics/${topicId}/comments`, {
     newComment,
   })
