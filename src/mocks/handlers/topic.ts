@@ -81,7 +81,8 @@ const handlers = [
       password: topic.password,
     })
 
-    if (createdTopic) return res(ctx.json({ statusCode: 204 }))
+    if (createdTopic)
+      return res(ctx.status(200), ctx.json({ createdTopicId: createdTopic.id }))
     else
       return res(ctx.json({ statusCode: 500, data: '주제를 만들지 못했어요.' }))
   }),
