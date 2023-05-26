@@ -21,12 +21,21 @@ type Props = {
 export default function Comment({ comment }: Props) {
   const { topicId } = useParams() as { topicId: string }
   const passwordInputRef = useRef<HTMLInputElement>(null)
-  const [createdComments] = useLocalStorage<string[]>('createdComments', [])
+  const [createdComments, setCreatedComments] = useLocalStorage<string[]>(
+    'createdComments',
+    [],
+  )
   const isMyComment = createdComments.includes(comment.id)
 
   const mutation = useMutation({
     mutationFn: deleteComment,
-    onSuccess: () => queryClient.invalidateQueries(commentKey.list(topicId)),
+    onSuccess: ({ deletedCommentId }) => {
+      const newCreatedComments = createdComments.filter(
+        (commentId) => commentId !== deletedCommentId,
+      )
+      setCreatedComments(newCreatedComments)
+      queryClient.invalidateQueries(commentKey.list(topicId))
+    },
   })
 
   function handleDeleteComment(e: FormEvent<HTMLFormElement>) {
