@@ -4,15 +4,22 @@ import { useMutation } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
 
 import { createTopic, topicKeys } from '@/api/topic'
+import { useLocalStorage } from '@/hooks'
 import { queryClient } from '@/main'
 import { NewTopic } from '@/types'
 
 export default function NewTopicPage() {
   const navigate = useNavigate()
 
+  const [createdTopics, setCreateTopics] = useLocalStorage<string[]>(
+    'createdTopics',
+    [],
+  )
+
   const mutation = useMutation({
     mutationFn: createTopic,
-    onSuccess: () => {
+    onSuccess: ({ createdTopicId }) => {
+      setCreateTopics([...createdTopics, createdTopicId])
       queryClient.invalidateQueries(topicKeys.new)
       navigate('/', { replace: true })
     },
