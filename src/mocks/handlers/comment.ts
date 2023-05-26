@@ -101,7 +101,8 @@ const handlers = [
       where: { id: { equals: commentId } },
     })
 
-    if (deleted) return res(ctx.status(204))
+    if (deleted)
+      return res(ctx.status(200), ctx.json({ deletedCommentId: deleted.id }))
     else return res(ctx.status(500))
   }),
 ]
