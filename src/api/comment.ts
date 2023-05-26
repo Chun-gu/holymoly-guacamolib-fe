@@ -44,7 +44,7 @@ export async function deleteComment({
   topicId: string
   commentId: string
   password: string
-}) {
+}): Promise<{ deletedCommentId: string }> {
   const response = await client.delete(
     `topics/${topicId}/comments/${commentId}`,
     { data: password },
