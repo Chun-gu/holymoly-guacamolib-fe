@@ -80,6 +80,7 @@ export async function vote({
 }: {
   topicId: string
   votedOption: string
-}) {
-  await client.post(`/topics/${topicId}/vote`, { votedOption })
+}): Promise<{ votedTopicId: string }> {
+  const response = await client.post(`/topics/${topicId}/vote`, { votedOption })
+  return response.data
 }
