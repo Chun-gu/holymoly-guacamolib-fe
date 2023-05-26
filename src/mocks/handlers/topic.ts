@@ -22,8 +22,14 @@ function refineTopic(topic: TopicSchema) {
     id: topic.id,
     title: topic.title,
     content: topic.content,
-    firstOption: { content: topic.firstOption.content },
-    secondOption: { content: topic.secondOption.content },
+    firstOption: {
+      content: topic.firstOption.content,
+      count: topic.firstOption.count,
+    },
+    secondOption: {
+      content: topic.secondOption.content,
+      count: topic.secondOption.count,
+    },
     createdAt: topic.createdAt,
   }
 }
@@ -114,12 +120,9 @@ const handlers = [
   }),
 
   // 투표
-  rest.post('/topic/:topicId/vote', async (req, res, ctx) => {
+  rest.post('/topics/:topicId/vote', async (req, res, ctx) => {
     const { topicId } = req.params as { topicId: string }
-    const { votedOption } = (await req.json()) as {
-      votedOption: 'firstOption' | 'secondOption'
-    }
-
+    const { votedOption } = await req.json()
     const foundTopic = db.topic.findFirst({
       where: { id: { equals: topicId } },
     })
@@ -130,6 +133,7 @@ const handlers = [
     const updatedTopic = db.topic.update({
       where: { id: { equals: topicId } },
       data: {
+        voteCount: (prevCount) => prevCount + 1,
         [votedOption]: {
           count: (prevCount: number) => prevCount + 1,
         },

@@ -1,13 +1,13 @@
-import { isAxiosError } from 'axios'
+// import { isAxiosError } from 'axios'
 
 import { client } from './index'
 
 import type { NewTopic, Topic } from '@/types'
 
-type ErrorResponse = {
-  statusCode: number
-  data: string
-}
+// type ErrorResponse = {
+//   statusCode: number
+//   data: string
+// }
 
 export const topicKeys = {
   all: ['topics'] as const,
@@ -74,9 +74,12 @@ export async function deleteTopic({
   return response.data
 }
 
-export async function vote(topicId: string, vote: string) {
-  const { data } = await client.post(`/topics/${topicId}/vote`, { vote })
-
-  if (data.statusCode === 204) return { isSuccess: true }
-  else return { isSuccess: false, message: data.data }
+export async function vote({
+  topicId,
+  votedOption,
+}: {
+  topicId: string
+  votedOption: string
+}) {
+  await client.post(`/topics/${topicId}/vote`, { votedOption })
 }
