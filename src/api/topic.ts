@@ -53,11 +53,11 @@ export async function getTopic(topicId: string): Promise<Topic> {
   // else return { isSuccess: false, message: data.data }
 }
 
-export async function createTopic(topic: NewTopic) {
-  const { data } = await client.post(`/topics`, { topic })
-
-  if (data.statusCode === 201) return { isSuccess: true, data: data.data }
-  else return { isSuccess: false, message: data.data }
+export async function createTopic(
+  topic: NewTopic,
+): Promise<{ createdTopicId: string }> {
+  const response = await client.post(`/topics`, { topic })
+  return response.data
 }
 
 export async function deleteTopic({
