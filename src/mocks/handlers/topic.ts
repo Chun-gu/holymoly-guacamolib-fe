@@ -32,8 +32,8 @@ const handlers = [
   // 전체 주제
   rest.get('/topics', (req, res, ctx) => {
     const sort = req.url.searchParams.get('sort')
-    console.log(sort)
     let topics
+
     if (sort === 'new')
       topics = db.topic.findMany({
         take: 10,
@@ -50,7 +50,7 @@ const handlers = [
     // if (topics) return res(ctx.json({ statusCode: 200, data: topics }))
     // else res(ctx.json({ statusCode: 500, data: '주제들을 가져오지 못했어요.' }))
     if (topics) return res(ctx.status(200), ctx.json(topics))
-    else res(ctx.json({ statusCode: 500, data: '주제들을 가져오지 못했어요.' }))
+    else res(ctx.status(500), ctx.json({ data: '주제들을 가져오지 못했어요.' }))
   }),
 
   // 단일 주제
@@ -60,10 +60,8 @@ const handlers = [
       where: { id: { equals: topicId } },
     })
 
-    if (topic)
-      return res(ctx.json({ statusCode: 200, data: refineTopic(topic) }))
-    else
-      return res(ctx.json({ statusCode: 404, data: '존재하지 않는 주제예요.' }))
+    if (topic) return res(ctx.status(200), ctx.json(refineTopic(topic)))
+    else return res(ctx.status(404), ctx.json('존재하지 않는 주제예요.'))
   }),
 
   // 주제 생성
@@ -110,7 +108,8 @@ const handlers = [
       where: { id: { equals: topicId } },
     })
 
-    if (deleted) return res(ctx.status(204))
+    if (deleted)
+      return res(ctx.status(200), ctx.json({ deletedTopicId: topicId }))
     else return res(ctx.status(500))
   }),
 
@@ -126,7 +125,7 @@ const handlers = [
     })
 
     if (!foundTopic)
-      return res(ctx.json({ statusCode: 404, data: '존재하지 않는 주제예요.' }))
+      return res(ctx.status(404), ctx.json('존재하지 않는 주제예요.'))
 
     const updatedTopic = db.topic.update({
       where: { id: { equals: topicId } },
@@ -137,7 +136,7 @@ const handlers = [
       },
     })
 
-    if (updatedTopic) return res(ctx.json({ statusCode: 204 }))
+    if (updatedTopic) return res(ctx.status(204))
   }),
 ]
 
