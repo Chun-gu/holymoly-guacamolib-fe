@@ -11,7 +11,7 @@ export default function MainPage() {
     content: '물복이 좋냐 딱복이 좋냐',
     firstOption: '물복',
     secondOption: '딱복',
-    password: '복복복',
+    password: '123',
   }
 
   const mutation = useMutation({
