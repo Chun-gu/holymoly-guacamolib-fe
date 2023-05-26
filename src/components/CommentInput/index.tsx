@@ -4,6 +4,7 @@ import { useMutation } from '@tanstack/react-query'
 import { useParams } from 'react-router-dom'
 
 import { commentKey, createComment } from '@/api/comment'
+import { useLocalStorage } from '@/hooks'
 import { queryClient } from '@/main'
 
 type NewComment = {
@@ -13,18 +14,15 @@ type NewComment = {
 
 export default function CommentInput() {
   const { topicId } = useParams() as { topicId: string }
+  const [createdComments, setCreatedComments] = useLocalStorage<string[]>(
+    'createdComments',
+    [],
+  )
 
   const mutation = useMutation({
-    mutationFn: ({
-      topicId,
-      newComment,
-    }: {
-      topicId: string
-      newComment: NewComment
-    }) => createComment(topicId, newComment),
-    onSuccess: (comment) => {
-      console.log('응답', comment)
-      // localStorage.setItem('comments', data.commentId)
+    mutationFn: createComment,
+    onSuccess: ({ createdCommentId }) => {
+      setCreatedComments([...createdComments, createdCommentId])
       queryClient.invalidateQueries(commentKey.list(topicId))
     },
   })
