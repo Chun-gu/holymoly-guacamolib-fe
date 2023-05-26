@@ -141,7 +141,9 @@ const handlers = [
       },
     })
 
-    if (updatedTopic) return res(ctx.status(204))
+    if (updatedTopic)
+      return res(ctx.status(200), ctx.json({ votedTopicId: updatedTopic.id }))
+    else return res(ctx.status(500))
   }),
 ]
 
