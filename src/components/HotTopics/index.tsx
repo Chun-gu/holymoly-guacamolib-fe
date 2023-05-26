@@ -9,7 +9,7 @@ export default function HotTopics() {
     isLoading,
     isError,
   } = useQuery({
-    queryKey: topicKeys.all,
+    queryKey: topicKeys.hot,
     queryFn: getTopics,
   })
 

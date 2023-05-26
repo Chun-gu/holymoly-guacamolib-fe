@@ -10,7 +10,7 @@ export default function NewTopics() {
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ['topics', { sort: 'new' }],
+    queryKey: topicKeys.new,
     queryFn: getNewTopics,
   })
 
