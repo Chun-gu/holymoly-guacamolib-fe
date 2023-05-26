@@ -12,12 +12,21 @@ export default function TopicPage() {
   const { topicId } = useParams() as { topicId: string }
   const passwordInputRef = useRef<HTMLInputElement>(null)
   const navigate = useNavigate()
-  const [createdTopics] = useLocalStorage<string[]>('createdTopics', [])
+  const [createdTopics, setCreatedTopics] = useLocalStorage<string[]>(
+    'createdTopics',
+    [],
+  )
   const isMyTopic = createdTopics.includes(topicId)
 
   const mutation = useMutation({
     mutationFn: deleteTopic,
-    onSuccess: () => navigate('/'),
+    onSuccess: ({ deletedTopicId }) => {
+      const newCreatedTopics = createdTopics.filter(
+        (topicId) => topicId !== deletedTopicId,
+      )
+      setCreatedTopics(newCreatedTopics)
+      navigate('/')
+    },
   })
 
   function handleDeleteTopic(e: FormEvent<HTMLFormElement>) {
