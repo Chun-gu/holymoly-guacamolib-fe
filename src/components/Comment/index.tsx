@@ -4,6 +4,7 @@ import { useMutation } from '@tanstack/react-query'
 import { useParams } from 'react-router-dom'
 
 import { commentKey, deleteComment } from '@/api/comment'
+import { useLocalStorage } from '@/hooks'
 import { formatDate } from '@/lib'
 import { queryClient } from '@/main'
 
@@ -20,6 +21,8 @@ type Props = {
 export default function Comment({ comment }: Props) {
   const { topicId } = useParams() as { topicId: string }
   const passwordInputRef = useRef<HTMLInputElement>(null)
+  const [createdComments] = useLocalStorage<string[]>('createdComments', [])
+  const isMyComment = createdComments.includes(comment.id)
 
   const mutation = useMutation({
     mutationFn: deleteComment,
@@ -42,12 +45,14 @@ export default function Comment({ comment }: Props) {
         <span>{formatDate(comment.createdAt, 'absolute')}</span>
       </div>
       <p>{comment.content}</p>
-      <form onSubmit={handleDeleteComment}>
-        <label>
-          비밀번호 <input type="password" ref={passwordInputRef} />
-        </label>
-        <button>삭제</button>
-      </form>
+      {isMyComment && (
+        <form onSubmit={handleDeleteComment}>
+          <label>
+            비밀번호 <input type="password" ref={passwordInputRef} />
+          </label>
+          <button>삭제</button>
+        </form>
+      )}
     </>
   )
 }
