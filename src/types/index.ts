@@ -4,6 +4,8 @@ export type Topic = {
   content: string
   firstOption: { content: string; count: number }
   secondOption: { content: string; count: number }
+  voteCount: number
+  commentCount: number
   createdAt: string
 }
 
