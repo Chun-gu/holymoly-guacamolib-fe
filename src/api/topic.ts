@@ -39,9 +39,15 @@ export async function getHotTopics(): Promise<Topic[]> {
   return response.data
 }
 
-export async function getNewTopics(): Promise<Topic[]> {
-  const response = await client.get(`/topics?sort=new`)
-  return response.data
+export async function getNewTopics({
+  pageParam = 0,
+}): Promise<{ topics: Topic[]; nextPage: number | undefined }> {
+  const SIZE = 10
+  const { data } = await client.get(
+    `/topics?sort=new&size=${SIZE}&page=${pageParam}`,
+  )
+  const nextPage = data.length === SIZE ? pageParam + 1 : undefined
+  return { topics: data, nextPage }
 }
 
 export async function getTopic(topicId: string): Promise<Topic> {
