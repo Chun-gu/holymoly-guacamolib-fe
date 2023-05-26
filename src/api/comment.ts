@@ -13,6 +13,11 @@ type NewComment = {
   password: string
 }
 
+export const commentKey = {
+  all: ['comments'] as const,
+  list: (topicId: string) => [...commentKey.all, topicId],
+}
+
 export async function getComments(topicId: string): Promise<Comment[]> {
   const response = await client.get(`/topics/${topicId}/comments`)
   return response.data
@@ -25,10 +30,18 @@ export async function createComment(topicId: string, newComment: NewComment) {
   return response.data
 }
 
-export async function deleteComment(topicId: string, commentId: string) {
+export async function deleteComment({
+  topicId,
+  commentId,
+  password,
+}: {
+  topicId: string
+  commentId: string
+  password: string
+}) {
   const response = await client.delete(
     `topics/${topicId}/comments/${commentId}`,
-    { data: { topicId, commentId } },
+    { data: password },
   )
   return response.data
 }

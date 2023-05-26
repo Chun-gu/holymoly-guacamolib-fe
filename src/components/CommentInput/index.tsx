@@ -3,7 +3,7 @@ import { FormEvent } from 'react'
 import { useMutation } from '@tanstack/react-query'
 import { useParams } from 'react-router-dom'
 
-import { createComment } from '@/api/comment'
+import { commentKey, createComment } from '@/api/comment'
 import { queryClient } from '@/main'
 
 type NewComment = {
@@ -25,7 +25,7 @@ export default function CommentInput() {
     onSuccess: (comment) => {
       console.log('응답', comment)
       // localStorage.setItem('comments', data.commentId)
-      queryClient.invalidateQueries(['comments', topicId])
+      queryClient.invalidateQueries(commentKey.list(topicId))
     },
   })
 

@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom'
 
 import Comment from '../Comment'
 
-import { getComments } from '@/api/comment'
+import { commentKey, getComments } from '@/api/comment'
 
 export default function CommentList() {
   const { topicId } = useParams() as { topicId: string }
@@ -13,7 +13,7 @@ export default function CommentList() {
     data: comments,
     isError,
   } = useQuery({
-    queryKey: ['comments', topicId],
+    queryKey: commentKey.list(topicId),
     queryFn: () => getComments(topicId),
   })
 
