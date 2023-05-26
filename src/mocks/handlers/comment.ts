@@ -51,9 +51,12 @@ const handlers = [
       content,
       password,
     })
-    console.log(updatedTopic, createdComment)
+
     if (updatedTopic && createdComment)
-      return res(ctx.status(201), ctx.json(createdComment))
+      return res(
+        ctx.status(200),
+        ctx.json({ createdCommentId: createdComment.id }),
+      )
     else return res(ctx.status(500))
   }),
 
