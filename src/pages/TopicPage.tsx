@@ -3,10 +3,11 @@ import { FormEvent, useRef } from 'react'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { useNavigate, useParams } from 'react-router-dom'
 
-import { deleteTopic, getTopic, topicKeys } from '@/api/topic'
+import { deleteTopic, getTopic, topicKeys, vote } from '@/api/topic'
 import { CommentInput, CommentList } from '@/components'
 import { useLocalStorage } from '@/hooks'
 import { formatDate } from '@/lib'
+import { queryClient } from '@/main'
 
 export default function TopicPage() {
   const { topicId } = useParams() as { topicId: string }
@@ -17,8 +18,13 @@ export default function TopicPage() {
     [],
   )
   const isMyTopic = createdTopics.includes(topicId)
+  const [votedTopics, setVotedTopics] = useLocalStorage<string[]>(
+    'votedTopics',
+    [],
+  )
+  const isVotedTopic = votedTopics.includes(topicId)
 
-  const mutation = useMutation({
+  const deleteMutation = useMutation({
     mutationFn: deleteTopic,
     onSuccess: ({ deletedTopicId }) => {
       const newCreatedTopics = createdTopics.filter(
@@ -29,13 +35,25 @@ export default function TopicPage() {
     },
   })
 
+  const voteMutation = useMutation({
+    mutationFn: vote,
+    onSuccess: ({ votedTopicId }) => {
+      setVotedTopics([...votedTopics, votedTopicId])
+      queryClient.invalidateQueries(topicKeys.topic(topicId))
+    },
+  })
+
+  function handleVote(votedOption: string) {
+    voteMutation.mutate({ topicId, votedOption })
+  }
+
   function handleDeleteTopic(e: FormEvent<HTMLFormElement>) {
     e.preventDefault()
     const password = passwordInputRef.current?.value
 
     if (!password) return alert('비밀번호를 입력하세요')
 
-    mutation.mutate({ topicId, password })
+    deleteMutation.mutate({ topicId, password })
   }
 
   const {
@@ -69,8 +87,16 @@ export default function TopicPage() {
         <h1>Q. {topic.title}</h1>
         <p>내용: {topic.content}</p>
         <div>
-          <button>{topic.firstOption.content}</button>
-          <button>{topic.secondOption.content}</button>
+          <button
+            onClick={() => handleVote('firstOption')}
+            disabled={isVotedTopic}>
+            {topic.firstOption.content}/{topic.firstOption.count}
+          </button>
+          <button
+            onClick={() => handleVote('secondOption')}
+            disabled={isVotedTopic}>
+            {topic.secondOption.content}/{topic.secondOption.count}
+          </button>
         </div>
       </section>
       <section>

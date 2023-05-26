@@ -2,6 +2,7 @@ import { useMutation, useQuery } from '@tanstack/react-query'
 import { Link } from 'react-router-dom'
 
 import { getTopic, topicKeys, vote } from '@/api/topic'
+import { useLocalStorage } from '@/hooks'
 import { queryClient } from '@/main'
 
 type Props = {
@@ -9,9 +10,18 @@ type Props = {
 }
 
 export default function TopicItem({ topicId }: Props) {
+  const [votedTopics, setVotedTopics] = useLocalStorage<string[]>(
+    'votedTopics',
+    [],
+  )
+  const isVotedTopic = votedTopics.includes(topicId)
+
   const mutation = useMutation({
     mutationFn: vote,
-    onSuccess: () => queryClient.invalidateQueries(topicKeys.topic(topicId)),
+    onSuccess: ({ votedTopicId }) => {
+      setVotedTopics([...votedTopics, votedTopicId])
+      queryClient.invalidateQueries(topicKeys.topic(topicId))
+    },
   })
 
   function handleVote(votedOption: string) {
@@ -36,10 +46,14 @@ export default function TopicItem({ topicId }: Props) {
       <h3>{topic.title}</h3>
       <p>{topic.content}</p>
       <div>
-        <button onClick={() => handleVote('firstOption')}>
+        <button
+          onClick={() => handleVote('firstOption')}
+          disabled={isVotedTopic}>
           {topic.firstOption.content}/{topic.firstOption.count}
         </button>
-        <button onClick={() => handleVote('secondOption')}>
+        <button
+          onClick={() => handleVote('secondOption')}
+          disabled={isVotedTopic}>
           {topic.secondOption.content}/{topic.secondOption.count}
         </button>
       </div>
