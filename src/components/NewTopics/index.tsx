@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query'
 import { Link } from 'react-router-dom'
 
 import { getNewTopics, topicKeys } from '@/api/topic'
-import { TopicItem } from '@/components'
+import { NewTopic } from '@/components'
 
 export default function NewTopics() {
   const {
@@ -24,7 +24,7 @@ export default function NewTopics() {
       {newTopics.map((newTopic) => (
         <li key={newTopic.id}>
           <Link to={`/topics/${newTopic.id}`}>
-            <TopicItem topicId={newTopic.id} />
+            <NewTopic topicId={newTopic.id} />
           </Link>
         </li>
       ))}

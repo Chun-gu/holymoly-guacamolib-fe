@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 
 import { getTopics, topicKeys } from '@/api/topic'
-import { TopicItem } from '@/components'
+import { HotTopic } from '@/components'
 
 export default function HotTopics() {
   const {
@@ -22,7 +22,7 @@ export default function HotTopics() {
     <ul>
       {hotTopics.map((hotTopic) => (
         <li key={hotTopic.id}>
-          <TopicItem topicId={hotTopic.id} />
+          <HotTopic topicId={hotTopic.id} />
         </li>
       ))}
     </ul>
