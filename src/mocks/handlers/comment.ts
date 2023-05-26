@@ -10,14 +10,17 @@ const handlers = [
   // 특정 주제의 댓글 목록
   rest.get('/topics/:topicId/comments', (req, res, ctx) => {
     const { topicId } = req.params as { topicId: string }
-    const { limit, skip } = Object.fromEntries(req.url.searchParams.entries())
-    console.log(topicId, limit, skip)
+    const size = Number(req.url.searchParams.get('size')) || 10
+    const page = Number(req.url.searchParams.get('page')) || 0
 
     if (!topicId)
       return res(ctx.status(404), ctx.json({ data: '존재하지 않는 주제예요.' }))
 
     const foundComments = db.comment.findMany({
       where: { topicId: { equals: topicId } },
+      take: size,
+      skip: page * size,
+      orderBy: { createdAt: 'asc' },
     })
     console.log(foundComments)
     if (foundComments) return res(ctx.status(200), ctx.json(foundComments))

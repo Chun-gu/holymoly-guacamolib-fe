@@ -18,9 +18,20 @@ export const commentKey = {
   list: (topicId: string) => [...commentKey.all, topicId],
 }
 
-export async function getComments(topicId: string): Promise<Comment[]> {
-  const response = await client.get(`/topics/${topicId}/comments`)
-  return response.data
+export async function getComments({
+  topicId,
+  pageParam = 0,
+}: {
+  topicId: string
+  pageParam: number
+}): Promise<{ comments: Comment[]; nextPage: number | undefined }> {
+  const SIZE = 10
+  const { data } = await client.get(
+    `/topics/${topicId}/comments?size=${SIZE}&page=${pageParam}`,
+  )
+  const nextPage = data.length === SIZE ? pageParam + 1 : undefined
+
+  return { comments: data, nextPage }
 }
 
 export async function createComment({
