@@ -3,7 +3,8 @@ import { FormEvent } from 'react'
 import { useMutation } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
 
-import { createTopic } from '@/api/topic'
+import { createTopic, topicKeys } from '@/api/topic'
+import { queryClient } from '@/main'
 import { NewTopic } from '@/types'
 
 export default function NewTopicPage() {
@@ -11,7 +12,10 @@ export default function NewTopicPage() {
 
   const mutation = useMutation({
     mutationFn: createTopic,
-    onSuccess: () => navigate('/', { replace: true }),
+    onSuccess: () => {
+      queryClient.invalidateQueries(topicKeys.new)
+      navigate('/', { replace: true })
+    },
   })
 
   function handleSubmit(e: FormEvent<HTMLFormElement>) {
