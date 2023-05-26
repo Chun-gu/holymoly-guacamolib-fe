@@ -1,19 +1,56 @@
+import { isAxiosError } from 'axios'
+
 import { client } from './index'
 
-import type { NewTopic } from '@/types'
+import type { NewTopic, Topic } from '@/types'
 
-export async function getTopics() {
-  const { data } = await client.get('/topics')
-
-  if (data.statusCode === 200) return { isSuccess: true, data: data.data }
-  else return { isSuccess: false, message: data.data }
+type ErrorResponse = {
+  statusCode: number
+  data: string
 }
 
-export async function getTopic(topicId: string) {
-  const { data } = await client.get(`/topics/${topicId}`)
+export const topicKeys = {
+  all: ['topics'] as const,
+  hot: ['topics', 'hot'] as const,
+  new: ['topics', 'new'] as const,
+  topic: (id: string) => [...topicKeys.all, id] as const,
+  sort: (sort: string) => ['topics', { sort }] as const,
+  lists: () => [...topicKeys.all, 'list'] as const,
+  list: (filters: string) => [...topicKeys.lists(), { filters }] as const,
+  details: () => [...topicKeys.all, 'detail'] as const,
+}
 
-  if (data.statusCode === 200) return { isSuccess: true, data: data.data }
-  else return { isSuccess: false, message: data.data }
+export async function getTopics(): Promise<Topic[]> {
+  const response = await client.get('/topics')
+  return response.data
+  // try {
+  // } catch (error) {
+  //   if (isAxiosError<ErrorResponse>(error)) {
+  //     return error.response?.data
+  //   }
+  // }
+
+  // if (data.statusCode === 200) return { isSuccess: true, data: data.data }
+  // else return { isSuccess: false, message: data.data }
+}
+
+export async function getHotTopics(): Promise<Topic[]> {
+  const response = await client.get(`/topics?sort=hot`)
+  return response.data
+}
+
+export async function getNewTopics(): Promise<Topic[]> {
+  const response = await client.get(`/topics?sort=new`)
+  return response.data
+}
+
+export async function getTopic(topicId: string): Promise<Topic> {
+  // throw new Error('클라이언트 에러!')
+  const response = await client.get(`/topics/${topicId}`)
+  return response.data
+
+  // if (data.statusCode === 200) return { isSuccess: true, data: data.data }
+  // else return { isSuccess: false, message: data.data }
 }
 
 export async function createTopic(topic: NewTopic) {
@@ -23,17 +60,23 @@ export async function createTopic(topic: NewTopic) {
   else return { isSuccess: false, message: data.data }
 }
 
-export async function deleteTopic(topicId: string, password: string) {
-  const { data } = await client.delete(`/topics/${topicId}`, {
+export async function deleteTopic({
+  topicId,
+  password,
+}: {
+  topicId: string
+  password: string
+}): Promise<{ deletedTopicId: string }> {
+  const response = await client.delete(`/topics/${topicId}`, {
     data: password,
   })
 
-  if (data.statusCode === 204) return { isSuccess: true }
-  else return { isSuccess: false, message: data.data }
+  return response.data
 }
 
 export async function vote(topicId: string, vote: string) {
   const { data } = await client.post(`/topics/${topicId}/vote`, { vote })
+
   if (data.statusCode === 204) return { isSuccess: true }
   else return { isSuccess: false, message: data.data }
 }
