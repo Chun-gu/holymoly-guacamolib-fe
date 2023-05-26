@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 
-import { getTopics, topicKeys } from '@/api/topic'
+import { getHotTopics, topicKeys } from '@/api/topic'
 import { HotTopic } from '@/components'
 
 export default function HotTopics() {
@@ -10,7 +10,7 @@ export default function HotTopics() {
     isError,
   } = useQuery({
     queryKey: topicKeys.hot,
-    queryFn: getTopics,
+    queryFn: getHotTopics,
   })
 
   if (isLoading) return <div>로딩 중...</div>
