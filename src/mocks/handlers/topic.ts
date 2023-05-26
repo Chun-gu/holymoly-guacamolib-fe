@@ -38,25 +38,26 @@ const handlers = [
   // 전체 주제
   rest.get('/topics', (req, res, ctx) => {
     const sort = req.url.searchParams.get('sort')
+    const size = Number(req.url.searchParams.get('size')) || 10
+    const page = Number(req.url.searchParams.get('page')) || 0
+
     let topics
 
     if (sort === 'new')
       topics = db.topic.findMany({
-        take: 10,
-        skip: 0,
+        take: size,
+        skip: page * size,
         orderBy: { createdAt: 'desc' },
       })
-    // else if (sort === 'hot')
-    //   topics = db.topic.findMany({
-    //     take: 5,
-    //     orderBy: { commentsCount: 'desc' },
-    //   })
+    else if (sort === 'hot')
+      topics = db.topic.findMany({
+        take: 5,
+        orderBy: { commentCount: 'desc' },
+      })
     else topics = db.topic.getAll().map((topic) => refineTopic(topic))
 
-    // if (topics) return res(ctx.json({ statusCode: 200, data: topics }))
-    // else res(ctx.json({ statusCode: 500, data: '주제들을 가져오지 못했어요.' }))
     if (topics) return res(ctx.status(200), ctx.json(topics))
-    else res(ctx.status(500), ctx.json({ data: '주제들을 가져오지 못했어요.' }))
+    else res(ctx.status(500), ctx.json('주제를 가져오지 못했어요.'))
   }),
 
   // 단일 주제
