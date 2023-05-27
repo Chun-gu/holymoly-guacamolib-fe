@@ -22,7 +22,7 @@ const handlers = [
       skip: page * size,
       orderBy: { createdAt: 'asc' },
     })
-    console.log(foundComments)
+
     if (foundComments) return res(ctx.status(200), ctx.json(foundComments))
   }),
 
