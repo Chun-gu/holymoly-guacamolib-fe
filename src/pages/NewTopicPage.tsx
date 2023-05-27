@@ -46,12 +46,12 @@ export default function NewTopicPage() {
           제목:{' '}
           <input
             type="text"
-            maxLength={50}
+            maxLength={20}
             {...register('title', {
               required: '제목을 입력해주세요.',
               maxLength: {
-                value: 50,
-                message: '최대 50자까지 입력 가능합니다.',
+                value: 20,
+                message: '최대 20자까지 입력 가능합니다.',
               },
             })}
           />
@@ -82,12 +82,12 @@ export default function NewTopicPage() {
           선택지 A:{' '}
           <input
             type="text"
-            maxLength={50}
+            maxLength={30}
             {...register('firstOption', {
               required: '선택지를 입력해주세요.',
               maxLength: {
-                value: 50,
-                message: '최대 50자까지 입력 가능합니다.',
+                value: 30,
+                message: '최대 30자까지 입력 가능합니다.',
               },
               validate: {
                 notSame: (v) =>
@@ -105,12 +105,12 @@ export default function NewTopicPage() {
           선택지 B:{' '}
           <input
             type="text"
-            maxLength={50}
+            maxLength={30}
             {...register('secondOption', {
               required: '선택지를 입력해주세요.',
               maxLength: {
-                value: 50,
-                message: '최대 50자까지 입력 가능합니다.',
+                value: 30,
+                message: '최대 30자까지 입력 가능합니다.',
               },
               validate: {
                 notSame: (v) =>
