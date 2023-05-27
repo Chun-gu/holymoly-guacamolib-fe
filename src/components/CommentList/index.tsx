@@ -1,4 +1,5 @@
 import { useInfiniteQuery } from '@tanstack/react-query'
+import { useInView } from 'react-intersection-observer'
 import { useParams } from 'react-router-dom'
 
 import Comment from '../Comment'
@@ -7,6 +8,7 @@ import { commentKey, getComments } from '@/api/comment'
 
 export default function CommentList() {
   const { topicId } = useParams() as { topicId: string }
+  const [observingTargetRef, inView] = useInView()
 
   const {
     isLoading,
@@ -22,6 +24,8 @@ export default function CommentList() {
     getNextPageParam: ({ nextPage }) => nextPage,
   })
 
+  if (inView && hasNextPage) fetchNextPage()
+
   if (isLoading) return <div>로딩 중...</div>
   if (isError) return <div>에러!</div>
 
@@ -35,19 +39,9 @@ export default function CommentList() {
             </li>
           )),
         )}
+        <li ref={observingTargetRef} />
+        {(isFetching || isFetchingNextPage) && <div>로딩 중...</div>}
       </ul>
-      <div>
-        <button
-          onClick={() => fetchNextPage()}
-          disabled={!hasNextPage || isFetchingNextPage}>
-          {isFetchingNextPage
-            ? '더 불러오는 중...'
-            : hasNextPage
-            ? '더 불러오기'
-            : '더 불러올 게 없어요'}
-        </button>
-      </div>
-      <div>{isFetching && !isFetchingNextPage ? '가져오는 중' : null}</div>
     </>
   )
 }

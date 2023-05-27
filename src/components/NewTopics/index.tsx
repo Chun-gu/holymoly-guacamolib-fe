@@ -1,10 +1,13 @@
 import { useInfiniteQuery } from '@tanstack/react-query'
+import { useInView } from 'react-intersection-observer'
 import { Link } from 'react-router-dom'
 
 import { getNewTopics, topicKeys } from '@/api/topic'
 import { NewTopic } from '@/components'
 
 export default function NewTopics() {
+  const [observingTargetRef, inView] = useInView()
+
   const {
     isLoading,
     isError,
@@ -18,6 +21,8 @@ export default function NewTopics() {
     queryFn: getNewTopics,
     getNextPageParam: ({ nextPage }) => nextPage,
   })
+
+  if (inView && hasNextPage) fetchNextPage()
 
   if (isLoading) return <div>로딩 중...</div>
   if (isError) return <div>에러!</div>
@@ -35,18 +40,8 @@ export default function NewTopics() {
           </li>
         )),
       )}
-      <div>
-        <button
-          onClick={() => fetchNextPage()}
-          disabled={!hasNextPage || isFetchingNextPage}>
-          {isFetchingNextPage
-            ? '더 불러오는 중...'
-            : hasNextPage
-            ? '더 불러오기'
-            : '더 불러올 게 없어요'}
-        </button>
-      </div>
-      <div>{isFetching && !isFetchingNextPage ? '가져오는 중' : null}</div>
+      <li ref={observingTargetRef} />
+      {(isFetching || isFetchingNextPage) && <div>로딩 중...</div>}
     </ul>
   )
 }
