@@ -1,31 +1,55 @@
-import { useQuery } from '@tanstack/react-query'
+import styled from 'styled-components'
 
-import { getTopic, topicKeys } from '@/api/topic'
+import { ReactComponent as Comment } from '@/assets/comment-icon.svg'
+import { ReactComponent as Vote } from '@/assets/vote-icon.svg'
+import { shortenNumber } from '@/lib'
+import { Topic } from '@/types'
 
 type Props = {
-  topicId: string
+  topic: Topic
 }
 
-export default function NewTopic({ topicId }: Props) {
-  const {
-    isLoading,
-    data: topic,
-    isError,
-  } = useQuery({
-    queryKey: topicKeys.topic(topicId),
-    queryFn: () => getTopic(topicId),
-  })
-
-  if (isLoading) return <div>로딩 중...</div>
-  if (isError) return <div>에러!</div>
-
+export default function NewTopic({ topic }: Props) {
   return (
-    <>
-      <h3>Q. {topic.title}</h3>
-      <div>
-        <div>{topic.commentCount}</div>
-        <div>{topic.voteCount}</div>
-      </div>
-    </>
+    <Container>
+      <Title>Q. {topic.title}</Title>
+      <CountContainer>
+        <Count>
+          <Vote />
+          <span>{shortenNumber(topic.voteCount)}</span>
+        </Count>
+        <Count>
+          <Comment />
+          <span>{shortenNumber(topic.commentCount)}</span>
+        </Count>
+      </CountContainer>
+    </Container>
   )
 }
+
+const Container = styled.div`
+  display: flex;
+  justify-content: space-between;
+  background-color: #ffffff;
+  padding: 17px 21px;
+  border: 1px solid #33ac5f;
+  border-radius: 20px;
+  margin-bottom: 14px;
+`
+const Title = styled.h3`
+  flex-grow: 1;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+`
+const CountContainer = styled.div`
+  display: flex;
+  gap: 10px;
+`
+const Count = styled.div`
+  display: flex;
+  align-items: center;
+  svg {
+    margin-right: 4px;
+  }
+`

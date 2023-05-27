@@ -22,7 +22,7 @@ export default function HotTopics() {
       {hotTopics.length === 0 && <NoTopic>주제가 하나도 없어요.</NoTopic>}
       {hotTopics.map((hotTopic) => (
         <li key={hotTopic.id}>
-          <HotTopic topicId={hotTopic.id} />
+          <HotTopic topic={hotTopic} />
         </li>
       ))}
     </List>

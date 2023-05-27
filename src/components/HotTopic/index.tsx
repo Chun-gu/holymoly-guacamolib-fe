@@ -1,16 +1,18 @@
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useMutation } from '@tanstack/react-query'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 
-import { getTopic, topicKeys, vote } from '@/api/topic'
+import { topicKeys, vote } from '@/api/topic'
 import { useLocalStorage } from '@/hooks'
 import { queryClient } from '@/main'
+import { Topic } from '@/types'
 
 type Props = {
-  topicId: string
+  topic: Topic
 }
 
-export default function HotTopic({ topicId }: Props) {
+export default function HotTopic({ topic }: Props) {
+  const topicId = topic.id
   const [votedTopics, setVotedTopics] = useLocalStorage<string[]>(
     'votedTopics',
     [],
@@ -28,18 +30,6 @@ export default function HotTopic({ topicId }: Props) {
   function handleVote(votedOption: string) {
     mutation.mutate({ topicId, votedOption })
   }
-
-  const {
-    isLoading,
-    data: topic,
-    isError,
-  } = useQuery({
-    queryKey: ['topics', topicId],
-    queryFn: () => getTopic(topicId),
-  })
-
-  if (isLoading) return <div>로딩 중...</div>
-  if (isError) return <div>에러!</div>
 
   return (
     <Container>
