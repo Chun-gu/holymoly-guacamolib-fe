@@ -26,5 +26,5 @@ export default function formatDate(
   if (absDiff >= DAY) return rtf.format(Math.ceil(diff / DAY), 'day')
   if (absDiff >= HOUR) return rtf.format(Math.ceil(diff / HOUR), 'hour')
   if (absDiff >= MINUTE) return rtf.format(Math.ceil(diff / MINUTE), 'minute')
-  return '방금 전'
+  return '방금'
 }
