@@ -14,6 +14,8 @@ type TopicSchema = {
     content?: string
     count?: number
   }
+  commentCount: number
+  voteCount: number
   createdAt: Date
 }
 
@@ -30,6 +32,8 @@ function refineTopic(topic: TopicSchema) {
       content: topic.secondOption.content,
       count: topic.secondOption.count,
     },
+    commentCount: topic.commentCount,
+    voteCount: topic.voteCount,
     createdAt: topic.createdAt,
   }
 }
@@ -94,16 +98,14 @@ const handlers = [
     const password = await req.text()
 
     if (!password)
-      return res(
-        ctx.json({ statusCode: 401, data: '비밀번호를 확인해주세요.' }),
-      )
+      return res(ctx.status(401), ctx.json('비밀번호를 확인해주세요.'))
 
     const foundTopic = db.topic.findFirst({
       where: { id: { equals: topicId } },
     })
 
     if (!foundTopic)
-      return res(ctx.json({ statusCode: 404, data: '존재하지 않는 주제예요.' }))
+      return res(ctx.status(404), ctx.json('존재하지 않는 주제예요.'))
 
     const isPasswordMatch = foundTopic.password === password
 
