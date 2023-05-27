@@ -1,6 +1,5 @@
-import { FormEvent } from 'react'
-
 import { useMutation } from '@tanstack/react-query'
+import { SubmitHandler, useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 
 import { createTopic, topicKeys } from '@/api/topic'
@@ -16,6 +15,15 @@ export default function NewTopicPage() {
     [],
   )
 
+  const {
+    register,
+    handleSubmit,
+    getValues,
+    formState: { errors, isSubmitting },
+  } = useForm<NewTopic>({
+    mode: 'onChange',
+  })
+
   const mutation = useMutation({
     mutationFn: createTopic,
     onSuccess: ({ createdTopicId }) => {
@@ -25,42 +33,115 @@ export default function NewTopicPage() {
     },
   })
 
-  function handleSubmit(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault()
-
-    const formData = new FormData(e.currentTarget)
-    const newTopic = Object.fromEntries(
-      formData.entries(),
-    ) as unknown as NewTopic
-
+  const onSubmit: SubmitHandler<NewTopic> = (newTopic) => {
     mutation.mutate(newTopic)
   }
 
   return (
     <>
       <h1>새로운 주제 작성</h1>
-      <form onSubmit={handleSubmit}>
+
+      <form onSubmit={handleSubmit(onSubmit)}>
         <label>
-          제목: <input name="title" type="text" />
+          제목:{' '}
+          <input
+            type="text"
+            maxLength={50}
+            {...register('title', {
+              required: '제목을 입력해주세요.',
+              maxLength: {
+                value: 50,
+                message: '최대 50자까지 입력 가능합니다.',
+              },
+            })}
+          />
         </label>
+        {errors.title && <p>{errors.title.message}</p>}
+
         <br />
+
         <label>
-          내용: <input name="content" type="text" />
+          내용:{' '}
+          <input
+            type="text"
+            maxLength={300}
+            {...register('content', {
+              required: '내용을 입력해주세요.',
+              maxLength: {
+                value: 300,
+                message: '최대 300자까지 입력 가능합니다.',
+              },
+            })}
+          />
         </label>
+        {errors.content && <p>{errors.content.message}</p>}
+
         <br />
+
         <label>
-          선택지 A: <input name="firstOption" type="text" />
+          선택지 A:{' '}
+          <input
+            type="text"
+            maxLength={50}
+            {...register('firstOption', {
+              required: '선택지를 입력해주세요.',
+              maxLength: {
+                value: 50,
+                message: '최대 50자까지 입력 가능합니다.',
+              },
+              validate: {
+                notSame: (v) =>
+                  v !== getValues('secondOption') ||
+                  '다른 선택지를 입력해주세요.',
+              },
+            })}
+          />
         </label>
+        {errors.firstOption && <p>{errors.firstOption.message}</p>}
+
         <br />
+
         <label>
-          선택지 B: <input name="secondOption" type="text" />
+          선택지 B:{' '}
+          <input
+            type="text"
+            maxLength={50}
+            {...register('secondOption', {
+              required: '선택지를 입력해주세요.',
+              maxLength: {
+                value: 50,
+                message: '최대 50자까지 입력 가능합니다.',
+              },
+              validate: {
+                notSame: (v) =>
+                  v !== getValues('firstOption') ||
+                  '다른 선택지를 입력해주세요.',
+              },
+            })}
+          />
         </label>
+        {errors.secondOption && <p>{errors.secondOption.message}</p>}
+
         <br />
+
         <label>
-          비밀번호: <input name="password" type="password" />
+          비밀번호:{' '}
+          <input
+            type="password"
+            {...register('password', {
+              required: '비밀번호를 입력해주세요.',
+              maxLength: {
+                value: 16,
+                message: '최대 16자까지 입력 가능합니다.',
+              },
+            })}
+          />
         </label>
+        {errors.password && <p>{errors.password.message}</p>}
+
         <br />
-        <button>작성</button>
+
+        <button disabled={isSubmitting}>작성</button>
       </form>
     </>
   )
