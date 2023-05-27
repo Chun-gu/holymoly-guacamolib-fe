@@ -1,0 +1,17 @@
+@font-face {
+  font-family: 'Maplestory';
+  src: url('/MaplestoryBold.woff2') format('woff');
+  font-weight: bold;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Maplestory';
+  src: url('/MaplestoryLight.woff2') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+body {
+  font-family: 'Maplestory';
+  background-color: #fdfad1;
+}
