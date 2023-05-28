@@ -5,7 +5,7 @@ type Comment = {
   topicId: string
   index: number
   content: string
-  createdAt: string
+  createAt: string
 }
 
 type NewComment = {
