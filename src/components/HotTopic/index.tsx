@@ -13,11 +13,11 @@ type Props = {
 
 export default function HotTopic({ topic }: Props) {
   const topicId = topic.id
-  const [votedTopics, setVotedTopics] = useLocalStorage<string[]>(
+  const [votedTopics, setVotedTopics] = useLocalStorage<number[]>(
     'votedTopics',
     [],
   )
-  const isVotedTopic = votedTopics.includes(topicId)
+  const isVotedTopic = votedTopics.includes(+topicId)
   const firstOptionPercentage = Math.floor(
     (topic.firstOption.count / topic.voteCount || 0) * 100,
   )
@@ -28,7 +28,7 @@ export default function HotTopic({ topic }: Props) {
   const mutation = useMutation({
     mutationFn: vote,
     onSuccess: ({ votedTopicId }) => {
-      setVotedTopics([...votedTopics, votedTopicId])
+      setVotedTopics([...votedTopics, +votedTopicId])
       queryClient.invalidateQueries(topicKeys.hot)
     },
   })

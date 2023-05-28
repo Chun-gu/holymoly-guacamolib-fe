@@ -10,16 +10,16 @@ type Props = {
 }
 
 export default function TopicItem({ topicId }: Props) {
-  const [votedTopics, setVotedTopics] = useLocalStorage<string[]>(
+  const [votedTopics, setVotedTopics] = useLocalStorage<number[]>(
     'votedTopics',
     [],
   )
-  const isVotedTopic = votedTopics.includes(topicId)
+  const isVotedTopic = votedTopics.includes(+topicId)
 
   const mutation = useMutation({
     mutationFn: vote,
     onSuccess: ({ votedTopicId }) => {
-      setVotedTopics([...votedTopics, votedTopicId])
+      setVotedTopics([...votedTopics, +votedTopicId])
       queryClient.invalidateQueries(topicKeys.topic(topicId))
     },
   })
