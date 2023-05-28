@@ -17,7 +17,7 @@ type Props = {
     topicId: string
     index: number
     content: string
-    createdAt: string
+    createAt: string
   }
 }
 
@@ -76,7 +76,7 @@ export default function Comment({ comment }: Props) {
           익명 {comment.index}
         </UserName>
         <DateWrapper>
-          <span>{formatDate(comment.createdAt, 'absolute')}</span>
+          <span>{formatDate(comment.createAt, 'absolute')}</span>
           {isMyComment && <button onClick={toggleDeleteTopic}>삭제</button>}
         </DateWrapper>
       </CommentHeader>

@@ -35,7 +35,10 @@ export async function getTopics(): Promise<Topic[]> {
 }
 
 export async function getHotTopics(): Promise<Topic[]> {
-  const response = await client.get(`/topics?sort=hot`)
+  const response = await client.get(
+    // `/topics`,
+    `/topics?sort=hot`,
+  )
   return response.data
 }
 
@@ -44,8 +47,10 @@ export async function getNewTopics({
 }): Promise<{ topics: Topic[]; nextPage: number | undefined }> {
   const SIZE = 10
   const { data } = await client.get(
+    // `/topics?size=${SIZE}&page=${pageParam}&sort=createdAt,desc`,
     `/topics?sort=new&size=${SIZE}&page=${pageParam}`,
   )
+  console.log(data)
   const nextPage = data.length === SIZE ? pageParam + 1 : undefined
   return { topics: data, nextPage }
 }
@@ -62,7 +67,7 @@ export async function getTopic(topicId: string): Promise<Topic> {
 export async function createTopic(
   topic: NewTopic,
 ): Promise<{ createdTopicId: string }> {
-  const response = await client.post(`/topics`, { topic })
+  const response = await client.post(`/topics`, { ...topic })
   return response.data
 }
 
@@ -87,6 +92,8 @@ export async function vote({
   topicId: string
   votedOption: string
 }): Promise<{ votedTopicId: string }> {
-  const response = await client.post(`/topics/${topicId}/vote`, { votedOption })
+  const response = await client.post(`/topics/${topicId}/vote`, {
+    vote: votedOption,
+  })
   return response.data
 }

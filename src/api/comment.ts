@@ -42,7 +42,7 @@ export async function createComment({
   newComment: NewComment
 }): Promise<{ createdCommentId: string }> {
   const response = await client.post(`topics/${topicId}/comments`, {
-    newComment,
+    ...newComment,
   })
   return response.data
 }
@@ -58,7 +58,7 @@ export async function deleteComment({
 }): Promise<{ deletedCommentId: string }> {
   const response = await client.delete(
     `topics/${topicId}/comments/${commentId}`,
-    { data: password },
+    { data: { password } },
   )
   return response.data
 }
