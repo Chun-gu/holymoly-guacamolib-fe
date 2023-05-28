@@ -1,10 +1,13 @@
 import { useQuery } from '@tanstack/react-query'
+import { useScrollContainer } from 'react-indiana-drag-scroll'
 import styled from 'styled-components'
 
 import { getHotTopics, topicKeys } from '@/api/topic'
 import { HotTopic } from '@/components'
 
 export default function HotTopics() {
+  const scrollContainer = useScrollContainer()
+
   const {
     data: hotTopics,
     isLoading,
@@ -18,7 +21,7 @@ export default function HotTopics() {
   if (isError) return <div>에러!</div>
 
   return (
-    <List>
+    <List ref={scrollContainer.ref}>
       {hotTopics.length === 0 && <NoTopic>주제가 하나도 없어요.</NoTopic>}
       {hotTopics.map((hotTopic) => (
         <li key={hotTopic.id}>
