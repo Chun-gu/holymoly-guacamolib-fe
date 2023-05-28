@@ -1,37 +1,37 @@
-import { useMutation } from '@tanstack/react-query'
+// import { useMutation } from '@tanstack/react-query'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 
-import { createTopic, topicKeys } from '@/api/topic'
+// import { createTopic, topicKeys } from '@/api/topic'
 import { ReactComponent as Flame } from '@/assets/flame-icon.svg'
 import { ReactComponent as New } from '@/assets/new-icon.svg'
 import { ReactComponent as Pencil } from '@/assets/pencil-icon.svg'
 import { HotTopics, NewTopics, OnboardingModal } from '@/components'
 import { useLocalStorage } from '@/hooks'
-import { queryClient } from '@/main'
+// import { queryClient } from '@/main'
 
 export default function MainPage() {
   const [isFirstVisit] = useLocalStorage('isFirstVisit', true)
 
-  const newTopic = {
-    title: '물물물물물물물물물물물물물물물물물물물물',
-    content:
-      '물복이 좋냐 딱복이 좋냐 물복복이 좋냐 딱복이 좋냐물복이 좋냐물복이 좋냐물복이 좋냐 딱복이 좋냐물복이 좋냐 딱복이 좋냐물복이 좋냐 딱복이 좋냐물복이 좋냐 딱복이 좋냐물복이 좋냐 딱복이 좋냐물복이 좋냐 딱복이 좋냐물복이 좋냐 딱복이 좋냐물복냐',
-    firstOption: '물물물물물물물물물물물물물물물물물물물물물물물물물물물물',
-    secondOption: '딱복',
-    password: '123',
-  }
+  // const newTopic = {
+  //   title: '물물물물물물물물물물물물물물물물물물물물',
+  //   content:
+  //     '물복이 좋냐 딱복이 좋냐 물복복이 좋냐 딱복이 좋냐물복이 좋냐물복이 좋냐물복이 좋냐 딱복이 좋냐물복이 좋냐 딱복이 좋냐물복이 좋냐 딱복이 좋냐물복이 좋냐 딱복이 좋냐물복이 좋냐 딱복이 좋냐물복이 좋냐 딱복이 좋냐물복이 좋냐 딱복이 좋냐물복냐',
+  //   firstOption: '물물물물물물물물물물물물물물물물물물물물물물물물물물물물',
+  //   secondOption: '딱복',
+  //   password: '123',
+  // }
 
-  const mutation = useMutation({
-    mutationFn: createTopic,
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: topicKeys.all }),
-  })
+  // const mutation = useMutation({
+  //   mutationFn: createTopic,
+  //   onSuccess: () => queryClient.invalidateQueries({ queryKey: topicKeys.all }),
+  // })
 
   return (
     <>
-      <div>
+      {/* <div>
         <button onClick={() => mutation.mutate(newTopic)}>create todos</button>
-      </div>
+      </div> */}
       <HotTopicSection>
         <SectionHeading>
           <Flame />
