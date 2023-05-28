@@ -20,11 +20,13 @@ export default function Topic() {
     [],
   )
   const isMyTopic = createdTopics.includes(topicId)
-  const [votedTopics, setVotedTopics] = useLocalStorage<string[]>(
+  const [votedTopics, setVotedTopics] = useLocalStorage<number[]>(
     'votedTopics',
     [],
   )
-  const isVotedTopic = votedTopics.includes(topicId)
+  console.log(votedTopics)
+  const isVotedTopic = votedTopics.includes(+topicId)
+  console.log(isVotedTopic)
 
   const deleteMutation = useMutation({
     mutationFn: deleteTopic,
@@ -40,7 +42,7 @@ export default function Topic() {
   const voteMutation = useMutation({
     mutationFn: vote,
     onSuccess: ({ votedTopicId }) => {
-      setVotedTopics([...votedTopics, votedTopicId])
+      setVotedTopics([...votedTopics, +votedTopicId])
       queryClient.invalidateQueries(topicKeys.topic(topicId))
     },
   })
@@ -89,10 +91,12 @@ export default function Topic() {
   if (isError) return <div>에러!</div>
 
   const firstOptionPercentage = Math.floor(
-    (topic.firstOption.count / topic.voteCount || 0) * 100,
+    (topic.firstOption.count /
+      (topic.firstOption.count + topic.secondOption.count) || 0) * 100,
   )
   const secondOptionPercentage = Math.floor(
-    (topic.secondOption.count / topic.voteCount || 0) * 100,
+    (topic.secondOption.count /
+      (topic.firstOption.count + topic.secondOption.count) || 0) * 100,
   )
 
   return (
