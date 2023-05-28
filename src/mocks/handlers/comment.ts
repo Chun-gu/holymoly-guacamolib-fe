@@ -14,7 +14,7 @@ const handlers = [
     const page = Number(req.url.searchParams.get('page')) || 0
 
     if (!topicId)
-      return res(ctx.status(404), ctx.json({ data: '존재하지 않는 주제예요.' }))
+      return res(ctx.status(404), ctx.json({ msg: '존재하지 않는 주제예요.' }))
 
     const foundComments = db.comment.findMany({
       where: { topicId: { equals: topicId } },
@@ -34,14 +34,14 @@ const handlers = [
     })
 
     if (!foundTopic)
-      return res(ctx.status(404), ctx.json({ data: '존재하지 않는 주제예요.' }))
+      return res(ctx.status(404), ctx.json({ msg: '존재하지 않는 주제예요.' }))
 
     const {
       newComment: { content, password },
     } = await req.json<NewComment>()
 
     if (!content || !password)
-      return res(ctx.status(400), ctx.json({ data: '입력값을 확인해주세요' }))
+      return res(ctx.status(400), ctx.json({ msg: '입력값을 확인해주세요' }))
 
     const index = foundTopic.commentCount + 1
     const updatedTopic = db.topic.update({
@@ -60,7 +60,8 @@ const handlers = [
         ctx.status(200),
         ctx.json({ createdCommentId: createdComment.id }),
       )
-    else return res(ctx.status(500))
+    else
+      return res(ctx.status(500), ctx.json({ msg: '댓글을 작성하지 못했어요' }))
   }),
 
   // 댓글 삭제
@@ -72,16 +73,14 @@ const handlers = [
     const password = await req.text()
 
     if (!password)
-      return res(
-        ctx.json({ statusCode: 401, data: '비밀번호를 확인해주세요.' }),
-      )
+      return res(ctx.status(401), ctx.json({ msg: '비밀번호를 확인해주세요.' }))
 
     const foundTopic = db.topic.findFirst({
       where: { id: { equals: topicId } },
     })
 
     if (!foundTopic)
-      return res(ctx.json({ statusCode: 404, data: '존재하지 않는 주제예요.' }))
+      return res(ctx.status(404), ctx.json({ msg: '존재하지 않는 주제예요.' }))
 
     const foundComment = db.comment.findFirst({
       where: { id: { equals: commentId } },
@@ -90,15 +89,13 @@ const handlers = [
     if (!foundComment)
       return res(
         ctx.status(404),
-        ctx.json({ data: '존재하지 않는 댓글이에요.' }),
+        ctx.json({ msg: '존재하지 않는 댓글이에요.' }),
       )
 
     const isPasswordMatch = foundComment.password === password
 
     if (!isPasswordMatch)
-      return res(
-        ctx.json({ statusCode: 401, data: '비밀번호를 확인해주세요.' }),
-      )
+      return res(ctx.status(401), ctx.json({ msg: '비밀번호를 확인해주세요.' }))
 
     const deleted = db.comment.delete({
       where: { id: { equals: commentId } },
@@ -106,7 +103,11 @@ const handlers = [
 
     if (deleted)
       return res(ctx.status(200), ctx.json({ deletedCommentId: deleted.id }))
-    else return res(ctx.status(500))
+    else
+      return res(
+        ctx.status(500),
+        ctx.json({ msg: '댓글을 삭제하지 못했어요.' }),
+      )
   }),
 ]
 

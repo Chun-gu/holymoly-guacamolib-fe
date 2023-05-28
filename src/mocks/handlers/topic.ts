@@ -61,7 +61,7 @@ const handlers = [
     else topics = db.topic.getAll().map((topic) => refineTopic(topic))
 
     if (topics) return res(ctx.status(200), ctx.json(topics))
-    else res(ctx.status(500), ctx.json('주제를 가져오지 못했어요.'))
+    else res(ctx.status(500), ctx.json({ msg: '주제를 가져오지 못했어요.' }))
   }),
 
   // 단일 주제
@@ -72,7 +72,8 @@ const handlers = [
     })
 
     if (topic) return res(ctx.status(200), ctx.json(refineTopic(topic)))
-    else return res(ctx.status(404), ctx.json('존재하지 않는 주제예요.'))
+    else
+      return res(ctx.status(404), ctx.json({ msg: '존재하지 않는 주제예요.' }))
   }),
 
   // 주제 생성
@@ -89,7 +90,7 @@ const handlers = [
     if (createdTopic)
       return res(ctx.status(200), ctx.json({ createdTopicId: createdTopic.id }))
     else
-      return res(ctx.json({ statusCode: 500, data: '주제를 만들지 못했어요.' }))
+      return res(ctx.status(500), ctx.json({ msg: '주제를 만들지 못했어요.' }))
   }),
 
   // 주제 삭제
@@ -98,21 +99,19 @@ const handlers = [
     const password = await req.text()
 
     if (!password)
-      return res(ctx.status(401), ctx.json('비밀번호를 확인해주세요.'))
+      return res(ctx.status(401), ctx.json({ msg: '비밀번호를 확인해주세요.' }))
 
     const foundTopic = db.topic.findFirst({
       where: { id: { equals: topicId } },
     })
 
     if (!foundTopic)
-      return res(ctx.status(404), ctx.json('존재하지 않는 주제예요.'))
+      return res(ctx.status(404), ctx.json({ msg: '존재하지 않는 주제예요.' }))
 
     const isPasswordMatch = foundTopic.password === password
 
     if (!isPasswordMatch)
-      return res(
-        ctx.json({ statusCode: 401, data: '비밀번호를 확인해주세요.' }),
-      )
+      return res(ctx.status(401), ctx.json({ msg: '비밀번호를 확인해주세요.' }))
 
     const deleted = db.topic.delete({
       where: { id: { equals: topicId } },
@@ -120,7 +119,11 @@ const handlers = [
 
     if (deleted)
       return res(ctx.status(200), ctx.json({ deletedTopicId: topicId }))
-    else return res(ctx.status(500))
+    else
+      return res(
+        ctx.status(500),
+        ctx.json({ msg: '주제를 삭제하지 못했어요.' }),
+      )
   }),
 
   // 투표
@@ -132,7 +135,7 @@ const handlers = [
     })
 
     if (!foundTopic)
-      return res(ctx.status(404), ctx.json('존재하지 않는 주제예요.'))
+      return res(ctx.status(404), ctx.json({ msg: '존재하지 않는 주제예요.' }))
 
     const updatedTopic = db.topic.update({
       where: { id: { equals: topicId } },
@@ -146,7 +149,7 @@ const handlers = [
 
     if (updatedTopic)
       return res(ctx.status(200), ctx.json({ votedTopicId: updatedTopic.id }))
-    else return res(ctx.status(500))
+    else return res(ctx.status(500), ctx.json({ msg: '투표를 하지 못했어요.' }))
   }),
 ]
 
