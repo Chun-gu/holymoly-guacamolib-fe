@@ -133,6 +133,9 @@ button {
   cursor: pointer;
   background-color: transparent;
 }
+button:disabled {
+  cursor: auto;
+}
 input,
 select,
 textarea,
