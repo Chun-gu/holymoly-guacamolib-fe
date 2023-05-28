@@ -7,9 +7,12 @@ import { ReactComponent as Flame } from '@/assets/flame-icon.svg'
 import { ReactComponent as New } from '@/assets/new-icon.svg'
 import { ReactComponent as Pencil } from '@/assets/pencil-icon.svg'
 import { HotTopics, NewTopics, OnboardingModal } from '@/components'
+import { useLocalStorage } from '@/hooks'
 import { queryClient } from '@/main'
 
 export default function MainPage() {
+  const [isFirstVisit] = useLocalStorage('isFirstVisit', true)
+
   const newTopic = {
     title: '물물물물물물물물물물물물물물물물물물물물',
     content:
@@ -26,7 +29,6 @@ export default function MainPage() {
 
   return (
     <>
-      {/* <OnboardingModal /> */}
       <div>
         <button onClick={() => mutation.mutate(newTopic)}>create todos</button>
       </div>
@@ -48,6 +50,7 @@ export default function MainPage() {
         <Pencil />
         글쓰기
       </WriteNewTopic>
+      {isFirstVisit && <OnboardingModal />}
     </>
   )
 }
