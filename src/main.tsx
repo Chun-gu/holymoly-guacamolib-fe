@@ -8,6 +8,7 @@ import { RouterProvider } from 'react-router-dom'
 
 import { router } from './router.tsx'
 import './index.css'
+import './font.css'
 
 if (import.meta.env.DEV) {
   const { worker } = await import('@/mocks/browser')
