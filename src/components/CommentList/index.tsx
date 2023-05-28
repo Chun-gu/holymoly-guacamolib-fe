@@ -17,8 +17,6 @@ export default function CommentList() {
     data: comments,
     fetchNextPage,
     hasNextPage,
-    // isFetching,
-    // isFetchingNextPage,
   } = useInfiniteQuery({
     queryKey: commentKey.list(topicId),
     queryFn: ({ pageParam }) => getComments({ topicId, pageParam }),
@@ -30,20 +28,18 @@ export default function CommentList() {
   if (isLoading) return <div>로딩 중...</div>
   if (isError) return <div>에러!</div>
 
-  if (comments.pages[0].comments.length !== 0)
-    return (
-      <List>
-        {comments.pages.map(({ comments }) =>
-          comments.map((comment) => (
-            <ListItem key={comment.id}>
-              <Comment comment={comment} />
-            </ListItem>
-          )),
-        )}
-        <li ref={observingTargetRef} />
-        {/* {(isFetching || isFetchingNextPage) && <div>로딩 중...</div>} */}
-      </List>
-    )
+  return comments.pages[0].comments.length !== 0 ? (
+    <List>
+      {comments.pages.map(({ comments }) =>
+        comments.map((comment) => (
+          <ListItem key={comment.id}>
+            <Comment comment={comment} />
+          </ListItem>
+        )),
+      )}
+      <li ref={observingTargetRef} />
+    </List>
+  ) : null
 }
 
 const List = styled.ul`
