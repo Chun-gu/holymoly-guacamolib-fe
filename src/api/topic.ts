@@ -79,7 +79,7 @@ export async function deleteTopic({
   password: string
 }): Promise<{ deletedTopicId: number }> {
   const response = await client.delete(`/topics/${topicId}`, {
-    data: password,
+    data: { password },
   })
 
   return response.data
