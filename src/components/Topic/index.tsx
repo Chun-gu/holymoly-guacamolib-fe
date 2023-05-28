@@ -90,6 +90,8 @@ export default function Topic() {
     mode: 'onChange',
   })
 
+  const canSubmit = isValid && !isSubmitting
+
   const onSubmit: SubmitHandler<{ password: string }> = ({ password }) => {
     deleteMutation.mutate({ topicId, password })
   }
@@ -179,9 +181,7 @@ export default function Topic() {
             </form>
             <div>
               <CancelButton onClick={toggleDeleteTopic}>취소</CancelButton>
-              <DeleteButton
-                form="passwordConfirmForm"
-                disabled={isSubmitting || !isValid}>
+              <DeleteButton form="passwordConfirmForm" disabled={!canSubmit}>
                 삭제
               </DeleteButton>
             </div>

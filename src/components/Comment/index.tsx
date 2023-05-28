@@ -56,6 +56,7 @@ export default function Comment({ comment }: Props) {
   } = useForm<{ password: string }>({
     mode: 'onChange',
   })
+  const canSubmit = isValid && !isSubmitting
   const commentId = comment.id
   const onSubmit: SubmitHandler<{ password: string }> = ({ password }) => {
     deleteMutation.mutate({ topicId, commentId, password })
@@ -111,9 +112,7 @@ export default function Comment({ comment }: Props) {
             </form>
             <div>
               <CancelButton onClick={toggleDeleteTopic}>취소</CancelButton>
-              <DeleteButton
-                form="passwordConfirmForm"
-                disabled={isSubmitting || !isValid}>
+              <DeleteButton form="passwordConfirmForm" disabled={!canSubmit}>
                 삭제
               </DeleteButton>
             </div>
