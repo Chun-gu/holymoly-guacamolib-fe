@@ -44,7 +44,7 @@ export default function NewTopicPage() {
   return (
     <Container>
       <Header>
-        <button>
+        <button onClick={() => navigate('/', { replace: true })}>
           <Close />
         </button>
         <h2>주제 만들기</h2>
