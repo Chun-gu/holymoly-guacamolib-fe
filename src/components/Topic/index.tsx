@@ -37,6 +37,9 @@ export default function Topic() {
       setCreatedTopics(newCreatedTopics)
       navigate('/')
     },
+    onError: () => {
+      setError('password', { type: 'confirm' })
+    },
   })
 
   const voteMutation = useMutation({
@@ -79,7 +82,12 @@ export default function Topic() {
     }
   }, [isDeleteModalOpen])
 
-  const { register, handleSubmit } = useForm<{ password: string }>({
+  const {
+    register,
+    handleSubmit,
+    setError,
+    formState: { isSubmitting, isValid, errors },
+  } = useForm<{ password: string }>({
     mode: 'onChange',
   })
 
@@ -157,6 +165,9 @@ export default function Topic() {
               주제를 <Delete>삭제</Delete>하시겠습니까?
             </p>
             <p>삭제하시려면 비밀번호를 입력해주세요</p>
+            {errors.password?.type === 'confirm' && (
+              <ErrorMessage>비밀번호가 틀렸어요.</ErrorMessage>
+            )}
             <form id="passwordConfirmForm" onSubmit={handleSubmit(onSubmit)}>
               <DeleteLabel htmlFor="password">비밀번호</DeleteLabel>
               <DeleteInput
@@ -169,7 +180,11 @@ export default function Topic() {
             </form>
             <div>
               <CancelButton onClick={toggleDeleteTopic}>취소</CancelButton>
-              <DeleteButton form="passwordConfirmForm">삭제</DeleteButton>
+              <DeleteButton
+                form="passwordConfirmForm"
+                disabled={isSubmitting || !isValid}>
+                삭제
+              </DeleteButton>
             </div>
           </ModalContainer>
         </Overlay>
@@ -326,4 +341,7 @@ const DeleteButton = styled.button`
   color: #ffffff;
   border-radius: 50px;
   background-color: #38af61;
+`
+const ErrorMessage = styled.p`
+  color: #fa773c;
 `
