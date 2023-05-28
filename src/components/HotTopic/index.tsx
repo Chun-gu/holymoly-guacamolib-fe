@@ -1,4 +1,5 @@
 import { useMutation } from '@tanstack/react-query'
+import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 
 import { topicKeys, vote } from '@/api/topic'
@@ -38,10 +39,12 @@ export default function HotTopic({ topic }: Props) {
 
   return (
     <Container>
-      <div>
-        <Title>Q. {topic.title}</Title>
-        <Content>{topic.content}</Content>
-      </div>
+      <Link to={`topics/${topicId}`}>
+        <div>
+          <Title>Q. {topic.title}</Title>
+          <Content>{topic.content}</Content>
+        </div>
+      </Link>
       {isVotedTopic ? (
         <ResultContainer>
           <Result>
