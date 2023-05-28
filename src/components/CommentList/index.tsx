@@ -1,6 +1,7 @@
 import { useInfiniteQuery } from '@tanstack/react-query'
 import { useInView } from 'react-intersection-observer'
 import { useParams } from 'react-router-dom'
+import styled from 'styled-components'
 
 import Comment from '../Comment'
 
@@ -16,8 +17,8 @@ export default function CommentList() {
     data: comments,
     fetchNextPage,
     hasNextPage,
-    isFetching,
-    isFetchingNextPage,
+    // isFetching,
+    // isFetchingNextPage,
   } = useInfiniteQuery({
     queryKey: commentKey.list(topicId),
     queryFn: ({ pageParam }) => getComments({ topicId, pageParam }),
@@ -29,19 +30,31 @@ export default function CommentList() {
   if (isLoading) return <div>로딩 중...</div>
   if (isError) return <div>에러!</div>
 
-  return (
-    <>
-      <ul>
+  if (comments.pages[0].comments.length !== 0)
+    return (
+      <List>
         {comments.pages.map(({ comments }) =>
           comments.map((comment) => (
-            <li key={comment.id}>
+            <ListItem key={comment.id}>
               <Comment comment={comment} />
-            </li>
+            </ListItem>
           )),
         )}
         <li ref={observingTargetRef} />
-        {(isFetching || isFetchingNextPage) && <div>로딩 중...</div>}
-      </ul>
-    </>
-  )
+        {/* {(isFetching || isFetchingNextPage) && <div>로딩 중...</div>} */}
+      </List>
+    )
 }
+
+const List = styled.ul`
+  background-color: #ffffff;
+  padding: 0 6px;
+  border: 1px solid #33ac5f;
+  margin-bottom: 20px;
+`
+const ListItem = styled.li`
+  padding: 12px 0;
+  &:nth-child(n + 2) {
+    border-top: 1px solid #c9c9c9;
+  }
+`
