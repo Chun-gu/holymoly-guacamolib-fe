@@ -13,7 +13,7 @@ import { NewTopic } from '@/types'
 export default function NewTopicPage() {
   const navigate = useNavigate()
 
-  const [createdTopics, setCreatedTopics] = useLocalStorage<string[]>(
+  const [createdTopics, setCreatedTopics] = useLocalStorage<number[]>(
     'createdTopics',
     [],
   )
@@ -31,7 +31,7 @@ export default function NewTopicPage() {
   const mutation = useMutation({
     mutationFn: createTopic,
     onSuccess: ({ createdTopicId }) => {
-      setCreatedTopics([...createdTopics, createdTopicId])
+      setCreatedTopics([...createdTopics, +createdTopicId])
       queryClient.invalidateQueries(topicKeys.new)
       navigate('/', { replace: true })
     },

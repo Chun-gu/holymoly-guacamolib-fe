@@ -77,7 +77,7 @@ export async function deleteTopic({
 }: {
   topicId: string
   password: string
-}): Promise<{ deletedTopicId: string }> {
+}): Promise<{ deletedTopicId: number }> {
   const response = await client.delete(`/topics/${topicId}`, {
     data: password,
   })

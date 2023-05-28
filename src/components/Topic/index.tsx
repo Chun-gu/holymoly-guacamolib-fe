@@ -15,11 +15,11 @@ export default function Topic() {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
   const { topicId } = useParams() as { topicId: string }
   const navigate = useNavigate()
-  const [createdTopics, setCreatedTopics] = useLocalStorage<string[]>(
+  const [createdTopics, setCreatedTopics] = useLocalStorage<number[]>(
     'createdTopics',
     [],
   )
-  const isMyTopic = createdTopics.includes(topicId)
+  const isMyTopic = createdTopics.includes(+topicId)
   const [votedTopics, setVotedTopics] = useLocalStorage<number[]>(
     'votedTopics',
     [],
@@ -32,7 +32,7 @@ export default function Topic() {
     mutationFn: deleteTopic,
     onSuccess: ({ deletedTopicId }) => {
       const newCreatedTopics = createdTopics.filter(
-        (topicId) => topicId !== deletedTopicId,
+        (topicId) => +topicId !== deletedTopicId,
       )
       setCreatedTopics(newCreatedTopics)
       navigate('/')
