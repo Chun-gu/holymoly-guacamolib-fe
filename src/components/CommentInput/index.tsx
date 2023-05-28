@@ -45,6 +45,7 @@ export default function CommentInput() {
     <CommentForm onSubmit={handleSubmit(onSubmit)}>
       <CommentTextArea
         placeholder="댓글 추가"
+        maxLength={100}
         {...register('content', {
           required: '내용을 입력해주세요.',
           maxLength: {
@@ -59,6 +60,7 @@ export default function CommentInput() {
         <PasswordInput
           type="password"
           placeholder="비밀번호"
+          maxLength={16}
           {...register('password', {
             required: '비밀번호를 입력해주세요.',
             maxLength: {
