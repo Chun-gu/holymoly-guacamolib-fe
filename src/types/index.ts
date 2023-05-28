@@ -6,7 +6,7 @@ export type Topic = {
   secondOption: { content: string; count: number }
   voteCount: number
   commentCount: number
-  createdAt: string
+  createAt: string
 }
 
 export type NewTopic = Pick<Topic, 'title' | 'content'> & {

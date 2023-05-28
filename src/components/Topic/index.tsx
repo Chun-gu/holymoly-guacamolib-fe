@@ -104,7 +104,7 @@ export default function Topic() {
       <Container>
         <Title>Q. {topic.title}</Title>
         <DateWrapper>
-          <CreatedDate>{formatDate(topic.createdAt, 'relative')}</CreatedDate>
+          <CreatedDate>{formatDate(topic.createAt, 'relative')}</CreatedDate>
           <DeleteAndShare>
             {isMyTopic && <button onClick={toggleDeleteTopic}>삭제</button>}
             <button>
