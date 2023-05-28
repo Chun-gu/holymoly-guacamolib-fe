@@ -24,9 +24,8 @@ export default function Topic() {
     'votedTopics',
     [],
   )
-  console.log(votedTopics)
+
   const isVotedTopic = votedTopics.includes(+topicId)
-  console.log(isVotedTopic)
 
   const deleteMutation = useMutation({
     mutationFn: deleteTopic,

@@ -22,7 +22,7 @@ export default function NewTopics() {
     queryFn: getNewTopics,
     getNextPageParam: ({ nextPage }) => nextPage,
   })
-  console.log(inView && hasNextPage)
+  
   if (inView && hasNextPage) fetchNextPage()
 
   if (isLoading) return <div>로딩 중...</div>

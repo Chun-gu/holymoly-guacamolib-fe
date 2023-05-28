@@ -40,7 +40,7 @@ export default function NewTopicPage() {
   const onSubmit: SubmitHandler<NewTopic> = (newTopic) => {
     mutation.mutate(newTopic)
   }
-  console.log(isValid)
+
   return (
     <Container>
       <Header>
